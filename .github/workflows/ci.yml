@@ -33,7 +33,7 @@ jobs:
       working-directory: ${{ env.WORKING_DIR }}
 
     - name: Run formatter (Prettier)
-      run: npm run prettier
+      run: npx prettier -c ./src/
       working-directory: ${{ env.WORKING_DIR }}
 
     - name: Run tests (Jest)
