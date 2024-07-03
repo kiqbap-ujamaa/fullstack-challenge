@@ -20,15 +20,20 @@ jobs:
 
     - name: Install dependencies
       run: npm install
+      working-directory: ../rdicidr-0.1.0
 
     - name: Run linter (ESLint)
       run: npm run lint
+      working-directory: ../rdicidr-0.1.0
 
     - name: Run formatter (Prettier)
       run: npm run prettier
+      working-directory: ../rdicidr-0.1.0
 
     - name: Run tests (Jest)
       run: CI=true npm run test
+      working-directory: ../rdicidr-0.1.0
 
     - name: Build
       run: npm run build
+      working-directory: ../rdicidr-0.1.0
