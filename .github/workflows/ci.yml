@@ -9,6 +9,9 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    env:
+      WORKING_DIR: rdicidr-0.1.0
+
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
@@ -20,20 +23,20 @@ jobs:
 
     - name: Install dependencies
       run: npm install
-      working-directory: ../rdicidr-0.1.0
+      working-directory: ${{ env.WORKING_DIR }}
 
     - name: Run linter (ESLint)
       run: npm run lint
-      working-directory: ../rdicidr-0.1.0
+      working-directory: ${{ env.WORKING_DIR }}
 
     - name: Run formatter (Prettier)
       run: npm run prettier
-      working-directory: ../rdicidr-0.1.0
+      working-directory: ${{ env.WORKING_DIR }}
 
     - name: Run tests (Jest)
       run: CI=true npm run test
-      working-directory: ../rdicidr-0.1.0
+      working-directory: ${{ env.WORKING_DIR }}
 
     - name: Build
       run: npm run build
-      working-directory: ../rdicidr-0.1.0
+      working-directory: ${{ env.WORKING_DIR }}
