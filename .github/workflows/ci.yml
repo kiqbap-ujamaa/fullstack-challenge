@@ -66,11 +66,11 @@ jobs:
 
     - name: Terraform Init
       run: terraform init
-      working-directory: terraform/environments/devel
+      working-directory: terraform/devel
 
     - name: Terraform Apply
       run: terraform apply -auto-approve -var="environment=devel"
-      working-directory: terraform/environments/devel
+      working-directory: terraform/devel
 
   deploy_staging:
     runs-on: ubuntu-latest
@@ -94,11 +94,11 @@ jobs:
 
     - name: Terraform Init
       run: terraform init
-      working-directory: terraform/environments/stage
+      working-directory: terraform/stage
 
     - name: Terraform Apply
       run: terraform apply -auto-approve -var="environment=stage"
-      working-directory: terraform/environments/stage
+      working-directory: terraform/stage
 
   deploy_production:
     runs-on: ubuntu-latest
@@ -122,8 +122,8 @@ jobs:
 
     - name: Terraform Init
       run: terraform init
-      working-directory: terraform/environments/prod
+      working-directory: terraform/prod
 
     - name: Terraform Apply
       run: terraform apply -auto-approve -var="environment=prod"
-      working-directory: terraform/environments/prod
+      working-directory: terraform/prod
