@@ -1,4 +1,4 @@
-name: CI Pipeline
+name: CI/CD Pipeline
 
 on:
   pull_request:
@@ -8,10 +8,8 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-
     env:
       WORKING_DIR: rdicidr-0.1.0
-
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
@@ -19,7 +17,7 @@ jobs:
     - name: Set up Node.js
       uses: actions/setup-node@v3
       with:
-        node-version: '15.14.0' # Use a version in the range specified by your project
+        node-version: '15.14.0' # Match the Node.js version to your project's requirements
 
     - name: Install npm version 7.x
       run: npm install -g npm@7
@@ -48,7 +46,6 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     if: github.ref == 'refs/heads/devel'
-
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
@@ -58,9 +55,16 @@ jobs:
       with:
         terraform_version: 1.0.0
 
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: us-west-2
+
     - name: Terraform Init
       run: terraform init
-      working-directory: terraform/devel
+      working-directory: terraform/environments/devel
 
     - name: Terraform Apply
       run: terraform apply -auto-approve -var="environment=devel"
@@ -70,7 +74,6 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     if: github.ref == 'refs/heads/stage'
-
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
@@ -79,6 +82,13 @@ jobs:
       uses: hashicorp/setup-terraform@v2
       with:
         terraform_version: 1.0.0
+
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: us-west-2
 
     - name: Terraform Init
       run: terraform init
@@ -86,13 +96,12 @@ jobs:
 
     - name: Terraform Apply
       run: terraform apply -auto-approve -var="environment=stage"
-      working-directory: terraform/stage
+      working-directory: terraform/environments/stage
 
   deploy_production:
     runs-on: ubuntu-latest
     needs: build
     if: github.ref == 'refs/heads/prod'
-
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
@@ -102,9 +111,16 @@ jobs:
       with:
         terraform_version: 1.0.0
 
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: us-west-2
+
     - name: Terraform Init
       run: terraform init
-      working-directory: terraform/prod
+      working-directory: terraform/environments/prod
 
     - name: Terraform Apply
       run: terraform apply -auto-approve -var="environment=prod"
